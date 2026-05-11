@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Singkong Kriuk - Gurihnya Nagih!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #fff;
+            color: #333;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-brand h3 {
+            color: #FF8C00;
+            font-size: 20px;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #FF4500;
+        }
+
+        #home {
+            display: flex;
+            height: 100vh;
+            align-items: center;
+        }
+
+        .home-content {
+            flex: 1;
+            background: linear-gradient(135deg, #FFD580, #FF8C00);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 50px;
+            color: white;
+        }
+
+        .home-image-container {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #fdfdfd;
+        }
+
+        .home-image-container img {
+            max-width: 80%;
+            border-radius: 20px;
+            box-shadow: 20px 20px 60px #bebebe;
+        }
+
+        .home-content h2 { font-size: 48px; margin-bottom: 10px; }
+        .home-content p { font-size: 18px; margin-bottom: 20px; line-height: 1.6; }
+        .home-content .status { background: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px; display: inline-block; font-weight: bold; }
+
+
+        #produk {
+            padding: 100px 20px;
+            background-color: #FFFDD0;
+            text-align: center;
+        }
+
+        .product-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            width: 300px;
+            color: #333;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+            border: 2px solid #FF8C00;
+        }
+
+        .card:hover { transform: translateY(-10px); }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .size-select {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .btn-add {
+            background: #FF8C00;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-add:hover { background: #e67e00; }
+
+        .product-stats {
+            margin-top: 10px;
+            color: #555;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+
+        .cart-floating {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: #FF4500;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 1001;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: white;
+            color: #FF4500;
+            border-radius: 50%;
+            padding: 2px 7px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        #cart-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 500px;
+            background: white;
+            z-index: 2000;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
+
+        .cart-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1999;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .btn-checkout {
+            background: #25d366;
+            color: white;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+    
+        #about { padding: 80px 50px; background: linear-gradient(135deg, #FFD580, #FF8C00); color: white; text-align: center; }
+        #info { padding: 80px 50px; background-color: #FFFDD0; display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+        .info-container { display: flex; justify-content: center; gap: 40px; max-width: 1200px; margin: 40px auto 0; flex-wrap: wrap; }
+        .info-card { background: #FF4500; color: white; padding: 30px; border-radius: 20px; flex: 1; min-width: 300px; box-shadow: 0 10px 30px rgba(255, 69, 0, 0.2); transition: transform 0.3s ease; }
+        .info-card:hover { transform: translateY(-5px); }
+        .info-card h2 { font-size: 26px; margin-bottom: 15px; }
+        .info-card p { font-size: 16px; line-height: 1.8; margin-bottom: 10px; }
+        .info-card ul { list-style: none; margin-left: 0; padding-left: 0; }
+        .info-card li { margin-bottom: 10px; }
+
+        .chart-wrapper { max-width: 900px; margin: 40px auto; padding: 30px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center; }
+        .chart-wrapper h2 { color: #FF8C00; margin-bottom: 20px; }
+
+        .cta-whatsapp {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25d366;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        @media (max-width: 768px) {
+            #home { flex-direction: column; text-align: center; }
+            .home-content { padding: 100px 20px; height: auto; }
+            nav { padding: 15px 20px; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-brand">
+            <img src="logo-removebg-preview.png" alt="Logo" width="40">
+            <h3>SINGKONG KRIUK</h3>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#home">Beranda</a></li>
+            <li><a href="#produk">Produk</a></li>
+            <li><a href="#about">Tentang Kami</a></li>
+            <li><a href="#info">Info</a></li>
+        </ul>
+    </nav>
+
+    <div class="cart-floating" onclick="toggleCart()">
+        🛒 <span class="cart-count" id="cart-count">0</span>
+    </div>
+
+    <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+    <div id="cart-modal">
+        <h3>Keranjang Belanja</h3>
+        <hr><br>
+        <div id="cart-items-list">
+            <!-- Items akan muncul di sini -->
+            <p style="text-align: center; color: #999;">Keranjang masih kosong</p>
+        </div>
+        <br>
+        <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2em;">
+            <span>Total:</span>
+            <span id="cart-total">Rp 0</span>
+        </div>
+        <button class="btn-checkout" onclick="checkoutWhatsApp()">Pesan via WhatsApp</button>
+        <button onclick="toggleCart()" style="width: 100%; background: none; border: none; margin-top: 10px; color: #666; cursor: pointer;">Tutup</button>
+    </div>
+
+    <section id="home">
+        <div class="home-content">
+            <h2>Krenyesnya Sampai ke Hati!</h2>
+            <p>Nikmati sensasi keripik singkong pilihan dengan bumbu rempah autentik. Dibuat dengan cinta untuk menemani waktu santai anda menjadi lebih istimeawa.</p>
+     
+            <p class="status">🕒 Pelayanan: 08.00 - 21.00 WIB</p>
+        </div>
+        <div class="home-image-container">
+            <img src="ini.jpeg" alt="Singkong Kriuk">
+        </div>
+    </section>
+
+    <section id="produk">
+        <h1>Pilih Varian Favoritmu</h1>
+        <div class="product-container">
+            <!-- Varian Original -->
+            <div class="card">
+                <img src="KRIPIK SINGKONG ORIGINAL 1KG SNACK CEMILAN PRIA WANITA ANAK DEWASA  PRODUK TERBARU TERLARIS.jpg" alt="Original">
+                <h3>Varian Original</h3>
+                <p>Gurih alami khas singkong</p>
+                <select class="size-select" id="price-original">
+                    <option value="30000">500g - Rp 30.000</option>
+                    <option value="60000">1kg - Rp 60.000</option>
+                </select>
+                <button class="btn-add" onclick="addToCart('Singkong Original', 'price-original', event)">Tambah ke Keranjang</button>
+                <p class="product-stats">Rating: <strong><span id="rating-original"></span></strong> | Terjual: <strong><span id="sold-original"></span></strong></p>
+            </div>
+
+            <div class="card">
+                <img src="Keripik Singkong Balado 250gram.jpg" alt="Pedas">
+                <h3>Varian Pedas</h3>
+                <p>Pedas cabai asli pilihan</p>
+                <select class="size-select" id="price-pedas">
+                    <option value="35000">500g - Rp 35.000</option>
+                    <option value="65000">1kg - Rp 65.000</option>
+                </select>
+                <button class="btn-add" onclick="addToCart('Singkong Pedas', 'price-pedas', event)">Tambah ke Keranjang</button>
+                <p class="product-stats">Rating: <strong><span id="rating-pedas"></span></strong> | Terjual: <strong><span id="sold-pedas"></span></strong></p>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <h1>Tentang Kami</h1>
+        <p>Singkong Kriuk adalah camilan premium yang menggunakan bahan baku singkong mentega kualitas terbaik dari petani lokal. Kami menggunakan teknik pemotongan presisi dan penggorengan suhu stabil untuk memastikan setiap kepingnya renyah sempurna.</p>
+        <br>
+            <h3>Keunggulan:</h3>
+            <p>✔ Bebas Pengawet | ✔ Bahan Alami | ✔ Selalu Fresh</p>
+            <div class="halal-badge">LPPOM MUI: TERDAFTAR HALAL</div>
+        <div style="margin-top: 10px; font-weight: bold; border: 1px solid white; display: inline-block; padding: 5px 15px; border-radius: 20px;">LPPOM MUI: TERDAFTAR HALAL</div>
+    </section>
+
+    <section id="info">
+        <h1 style="font-size: 36px; color: #FF8C00;">Informasi Pengiriman & Pembayaran</h1>
+        <div class="info-container">
+            <div class="info-card">
+                <h2>📍 Lokasi & Operasional</h2>
+                <p><strong>Alamat Produksi:</strong><br>
+                Gelang, Kecamatan Sumberbaru, Kabupaten Jember, Jawa Timur 68156.</p>
+                <p><strong>Pengiriman:</strong><br>
+                Tersedia GoFood, J&T, dan GoSend untuk memastikan pesanan sampai dengan aman.</p>
+            </div>
+            <div class="info-card">
+                <h2>💳 Metode Pembayaran</h2>
+                <p>Kami menerima pembayaran digital untuk kenyamanan Anda.</p>
+                <ul>
+                    <li>✅ Transfer Bank (BCA / Mandiri)</li>
+                    <li>✅ Scan QRIS (Semua Bank & E-Wallet)</li>
+                    <li>✅ Saldo DANA</li>
+                </ul>
+                <p>Mohon kirimkan bukti transfer kepada admin untuk konfirmasi pesanan.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="chart-wrapper">
+        <h2>Grafik Penjualan Terkini</h2>
+        <canvas id="salesChart" height="240"></canvas>
+    </section>
+
+    <a href="https://wa.me/62882009835901" class="cta-whatsapp" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA" width="25">
+        Chat Admin
+    </a>
+
+    <footer style="text-align: center; padding: 20px; background: #FF8C00; color: white; margin-top: 50px;">
+        <p>👥 Total Pengunjung: <span id="visitor-count">1</span></p>
+    </footer>
+
+    <script>
+        let cart = [];
+
+        const productStats = JSON.parse(localStorage.getItem('productStats')) || {
+            'Singkong Original': {
+                sold: 0,
+                rating: 4.5,
+                variants: {
+                    '500g': 85,
+                    '1kg': 60
+                }
+            },
+            'Singkong Pedas': {
+                sold: 0,
+                rating: 4.2,
+                variants: {
+                    '500g': 45,
+                    '1kg': 30
+                }
+            }
+        };
+
+        function normalizeProductStats() {
+            const defaults = {
+                'Singkong Original': { sold: 0, rating: 4.5, variants: { '500g': 85, '1kg': 60 } },
+                'Singkong Pedas': { sold: 0, rating: 4.2, variants: { '500g': 45, '1kg': 30 } }
+            };
+
+            for (const key in defaults) {
+                if (!productStats[key]) {
+                    productStats[key] = JSON.parse(JSON.stringify(defaults[key]));
+                }
+                if (!productStats[key].variants) {
+                    productStats[key].variants = JSON.parse(JSON.stringify(defaults[key].variants));
+                }
+                productStats[key].variants['500g'] = productStats[key].variants['500g'] || 0;
+                productStats[key].variants['1kg'] = productStats[key].variants['1kg'] || 0;
+                productStats[key].sold = productStats[key].sold || 0;
+                productStats[key].rating = productStats[key].rating || defaults[key].rating;
+            }
+        }
+
+        normalizeProductStats();
+
+        function saveProductStats() {
+            localStorage.setItem('productStats', JSON.stringify(productStats));
+        }
+
+        function formatRating(value) {
+            return value.toFixed(1).replace('.0', '') + ' ⭐';
+        }
+
+        function updateProductStatsUI() {
+            document.getElementById('rating-original').innerText = formatRating(productStats['Singkong Original'].rating);
+            document.getElementById('sold-original').innerText = productStats['Singkong Original'].sold.toLocaleString();
+            document.getElementById('rating-pedas').innerText = formatRating(productStats['Singkong Pedas'].rating);
+            document.getElementById('sold-pedas').innerText = productStats['Singkong Pedas'].sold.toLocaleString();
+        }
+
+        updateProductStatsUI();
+
+        let visitorCount = localStorage.getItem('visitorCount') ? parseInt(localStorage.getItem('visitorCount')) : 0;
+        visitorCount += 1;
+        localStorage.setItem('visitorCount', visitorCount);
+        document.getElementById('visitor-count').innerText = visitorCount.toLocaleString();
+
+        function toggleCart() {
+            const modal = document.getElementById('cart-modal');
+            const overlay = document.getElementById('cart-overlay');
+            const isVisible = modal.style.display === 'block';
+            modal.style.display = isVisible ? 'none' : 'block';
+            overlay.style.display = isVisible ? 'none' : 'block';
+        }
+
+        function addToCart(name, selectId, event) {
+            const select = document.getElementById(selectId);
+            const price = parseInt(select.value);
+            const size = select.options[select.selectedIndex].text.split(' - ')[0];
+
+            cart.push({ name, size, price });
+            updateCartUI();
+            
+            // Animasi tombol
+            const btn = event.target;
+            btn.innerText = "✅ Berhasil!";
+            setTimeout(() => { btn.innerText = "Tambah ke Keranjang"; }, 1000);
+        }
+
+        function updateCartUI() {
+            const list = document.getElementById('cart-items-list');
+            const count = document.getElementById('cart-count');
+            const totalDisplay = document.getElementById('cart-total');
+            
+            list.innerHTML = "";
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                total += item.price;
+                list.innerHTML += `
+                    <div class="cart-item">
+                        <div>
+                            <strong>${item.name}</strong><br>
+                            <small>${item.size}</small>
+                        </div>
+                        <div>
+                            <span>Rp ${item.price.toLocaleString()}</span>
+                            <button onclick="removeItem(${index})" style="margin-left:10px; color:red; border:none; background:none; cursor:pointer;">✕</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            if(cart.length === 0) list.innerHTML = '<p style="text-align: center; color: #999;">Keranjang masih kosong</p>';
+            
+            count.innerText = cart.length;
+            totalDisplay.innerText = "Rp " + total.toLocaleString();
+        }
+
+        function removeItem(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function checkoutWhatsApp() {
+            if(cart.length === 0) return alert("Keranjang Anda kosong!");
+
+            let message = "Halo Singkong Kriuk, saya mau pesan:%0A%0A";
+            let total = 0;
+
+            cart.forEach((item, i) => {
+                message += `${i+1}. ${item.name} (${item.size}) - Rp ${item.price.toLocaleString()}%0A`;
+                total += item.price;
+
+                if (productStats[item.name]) {
+                    productStats[item.name].sold += 1;
+                    productStats[item.name].rating = Math.min(5, productStats[item.name].rating * 1.03);
+                    const sizeKey = item.size.trim();
+                    if (!productStats[item.name].variants[sizeKey]) {
+                        productStats[item.name].variants[sizeKey] = 0;
+                    }
+                    productStats[item.name].variants[sizeKey] += 1;
+                }
+            });
+
+            saveProductStats();
+            updateProductStatsUI();
+            updateSalesChart();
+
+            message += `%0A*Total Akhir: Rp ${total.toLocaleString()}*%0A%0AAlamat Pengiriman: `;
+            
+            const waUrl = `https://wa.me/62882009835901?text=${message}`;
+                window.open(waUrl, '_blank');
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function getSalesChartData() {
+            return [
+                productStats['Singkong Original'].variants['500g'] || 0,
+                productStats['Singkong Original'].variants['1kg'] || 0,
+                productStats['Singkong Pedas'].variants['500g'] || 0,
+                productStats['Singkong Pedas'].variants['1kg'] || 0
+            ];
+        }
+
+        const chartCtx = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(chartCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Original 500g', 'Original 1kg', 'Pedas 500g', 'Pedas 1kg'],
+                datasets: [{
+                    label: 'Jumlah Terjual',
+                    data: getSalesChartData(),
+                    backgroundColor: '#FF8C00',
+                    borderColor: '#e67e00',
+                    borderWidth: 1,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 10
+                        },
+                        title: {
+                            display: true,
+                            text: 'Jumlah Produk Terjual'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        function updateSalesChart() {
+            salesChart.data.datasets[0].data = getSalesChartData();
+            salesChart.update();
+        }
+
+        updateSalesChart();
+    </script>
+</body>
+</html>
